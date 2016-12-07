@@ -48,7 +48,7 @@
 <script>
 export default {
   name: 'Repository',
-  data: function () {
+  data () {
     return {
       githubUrl: 'https://api.github.com/search/repositories?q=language%3Ajavascript&sort=stars',
       response: null,
@@ -56,10 +56,10 @@ export default {
     }
   },
   methods: {
-    callGitHub: function () {
+    callGitHub () {
       var repo = this
 
-      this.$parent.callAPI('GET', this.githubUrl).then(function (response) {
+      this.$http.get(this.githubUrl).then(function (response) {
         console.log('GitHub Response:', response)
 
         if (response.status !== 200) {

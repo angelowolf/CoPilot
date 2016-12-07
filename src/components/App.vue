@@ -28,14 +28,13 @@
         })
       },
       logout: function () {
-        this.$store.dispatch('SET_USER', null)
-        this.$store.dispatch('SET_TOKEN', null)
+        this.$store.dispatch('setUser', null)
+        this.$store.dispatch('setToken', null)
 
         if (window.localStorage) {
           window.localStorage.setItem('user', null)
           window.localStorage.setItem('token', null)
         }
-
         this.$router.push('/login')
       }
     }

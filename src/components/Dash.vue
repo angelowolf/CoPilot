@@ -155,21 +155,21 @@
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
           <li class="header">TOOLS</li>
-          <li class="active pageLink" v-on:click="toggleMenu"><router-link to="/"><i class="fa fa-desktop"></i><span class="page">Dashboard</span></router-link></li>
-          <li class="pageLink" v-on:click="toggleMenu"><router-link to="/tables"><i class="fa fa-table"></i><span class="page">Tables</span></router-link></li>
+          <li class="pageLink" :class="{active: isMenuSelected('Dashboard')}"><router-link to="/"><i class="fa fa-desktop"></i><span class="page">Dashboard</span></router-link></li>
+          <li class="pageLink" :class="{active: isMenuSelected('Tables')}"><router-link to="/tables"><i class="fa fa-table"></i><span class="page">Tables</span></router-link></li>
 
           <li class="header">ME</li>
-          <li class="pageLink" v-on:click="toggleMenu"><router-link to="/tasks"><i class="fa fa-tasks"></i><span class="page">Tasks</span></router-link></li>
-          <li class="pageLink" v-on:click="toggleMenu"><router-link to="/setting"><i class="fa fa-cog"></i><span class="page">Settings</span></router-link></li>
+          <li class="pageLink" :class="{active: isMenuSelected('Tasks')}"><router-link to="/tasks"><i class="fa fa-tasks"></i><span class="page">Tasks</span></router-link></li>
+          <li class="pageLink" :class="{active: isMenuSelected('Settings')}"><router-link to="/setting"><i class="fa fa-cog"></i><span class="page">Settings</span></router-link></li>
 
           <li class="header">LOGS</li>
-          <li class="pageLink" v-on:click="toggleMenu"><router-link to="/access"><i class="fa fa-book"></i><span class="page">Access</span></router-link></li>
-          <li class="pageLink" v-on:click="toggleMenu"><router-link to="/server"><i class="fa fa-hdd-o"></i><span class="page">Server</span></router-link></li>
-          <li class="pageLink" v-on:click="toggleMenu"><router-link to="/repos"><i class="fa fa-heart"></i><span class="page">Repos</span><small class="label pull-right bg-green">AJAX</small></router-link></li>
+          <li class="pageLink" :class="{active: isMenuSelected('Access')}"><router-link to="/access"><i class="fa fa-book"></i><span class="page">Access</span></router-link></li>
+          <li class="pageLink" :class="{active: isMenuSelected('Server')}"><router-link to="/server"><i class="fa fa-hdd-o"></i><span class="page">Server</span></router-link></li>
+          <li class="pageLink" :class="{active: isMenuSelected('Repos')}"><router-link to="/repos"><i class="fa fa-heart"></i><span class="page">Repos</span><small class="label pull-right bg-green">AJAX</small></router-link></li>
 
           <li class="header">PAGES</li>
-          <li class="pageLink" v-on:click="toggleMenu"><router-link to="/login"><i class="fa fa-circle-o text-yellow"></i> <span class="page">Login</span></router-link></li>
-          <li class="pageLink" v-on:click="toggleMenu"><router-link to="/404"><i class="fa fa-circle-o text-red"></i> <span class="page">404</span></router-link></li>
+          <li class="pageLink" :class="{active: isMenuSelected('Login')}"><router-link to="/login"><i class="fa fa-circle-o text-yellow"></i> <span class="page">Login</span></router-link></li>
+          <li class="pageLink" :class="{active: isMenuSelected('404')}"><router-link to="/404"><i class="fa fa-circle-o text-red"></i> <span class="page">404</span></router-link></li>
         </ul>
         <!-- /.sidebar-menu -->
       </section>
@@ -204,6 +204,7 @@
 
 <script>
 import faker from 'faker'
+import {mapState} from 'vuex'
 require('hideseek')
 
 module.exports = {
@@ -222,14 +223,12 @@ module.exports = {
     }
   },
   computed: {
-    store: function () {
-      return this.$parent.$store
-    },
+    ...mapState({
+      userStore: state => state.userStore,
+      menuStore: state => state.menuStore
+    }),
     state: function () {
-      return this.store.state
-    },
-    callAPI: function () {
-      return this.$parent.callAPI
+      return this.userStore
     },
     demo: function () {
       return {
@@ -246,14 +245,10 @@ module.exports = {
   },
   methods: {
     changeloading: function () {
-      this.store.dispatch('TOGGLE_SEARCHING')
+      this.userStore.dispatch('TOGGLE_SEARCHING')
     },
-    toggleMenu: function (event) {
-      // remove active from li
-      window.$('li.pageLink').removeClass('active')
-
-      // Add it to the item that was clicked
-      event.toElement.parentElement.className = 'pageLink active'
+    isMenuSelected (nombreMenu) {
+      return this.menuStore.menuActual === nombreMenu
     }
   },
   mounted: function () {
