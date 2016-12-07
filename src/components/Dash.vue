@@ -24,11 +24,11 @@
             <li class="dropdown messages-menu">
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-envelope-o"></i>
-                <span class="label label-success">{{ state.userInfo.messages | count }}</span>
+                <span class="label label-success">{{ userStore.userInfo.messages | count }}</span>
               </a>
               <ul class="dropdown-menu">
-                <li class="header">You have {{ state.userInfo.messages | count }} message(s)</li>
-                <li v-if="state.userInfo.messages.length > 0">
+                <li class="header">You have {{ userStore.userInfo.messages | count }} message(s)</li>
+                <li v-if="userStore.userInfo.messages.length > 0">
                   <!-- inner menu: contains the messages -->
                   <ul class="menu">
                     <li><!-- start message -->
@@ -46,7 +46,7 @@
                   </ul>
                   <!-- /.menu -->
                 </li>
-                <li class="footer" v-if="state.userInfo.messages.length > 0"><a href="javascript:;">See All Messages</a></li>
+                <li class="footer" v-if="userStore.userInfo.messages.length > 0"><a href="javascript:;">See All Messages</a></li>
               </ul>
             </li>
             <!-- /.messages-menu -->
@@ -55,11 +55,11 @@
             <li class="dropdown notifications-menu">
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-bell-o"></i>
-                <span class="label label-warning">{{ state.userInfo.notifications | count }}</span>
+                <span class="label label-warning">{{ userStore.userInfo.notifications | count }}</span>
               </a>
               <ul class="dropdown-menu">
-                <li class="header">You have {{ state.userInfo.notifications | count }} notification(s)</li>
-                <li v-if="state.userInfo.notifications.length > 0">
+                <li class="header">You have {{ userStore.userInfo.notifications | count }} notification(s)</li>
+                <li v-if="userStore.userInfo.notifications.length > 0">
                   <!-- Inner Menu: contains the notifications -->
                   <ul class="menu">
                     <li><!-- start notification -->
@@ -70,7 +70,7 @@
                     <!-- end notification -->
                   </ul>
                 </li>
-                <li class="footer" v-if="state.userInfo.notifications.length > 0"><a href="javascript:;">View all</a></li>
+                <li class="footer" v-if="userStore.userInfo.notifications.length > 0"><a href="javascript:;">View all</a></li>
               </ul>
             </li>
 
@@ -78,11 +78,11 @@
             <li class="dropdown tasks-menu">
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-flag-o"></i>
-                <span class="label label-danger">{{ state.userInfo.tasks | count }} </span>
+                <span class="label label-danger">{{ userStore.userInfo.tasks | count }} </span>
               </a>
               <ul class="dropdown-menu">
-                <li class="header">You have {{ state.userInfo.tasks | count }}  task(s)</li>
-                <li v-if="state.userInfo.tasks.length > 0">
+                <li class="header">You have {{ userStore.userInfo.tasks | count }}  task(s)</li>
+                <li v-if="userStore.userInfo.tasks.length > 0">
                   <!-- Inner menu: contains the tasks -->
                   <ul class="menu">
                     <li><!-- Task item -->
@@ -104,7 +104,7 @@
                     <!-- end task item -->
                   </ul>
                 </li>
-                <li class="footer" v-if="state.userInfo.tasks.length > 0">
+                <li class="footer" v-if="userStore.userInfo.tasks.length > 0">
                   <a href="javascript:;">View all tasks</a>
                 </li>
               </ul>
@@ -227,9 +227,6 @@ module.exports = {
       userStore: state => state.userStore,
       menuStore: state => state.menuStore
     }),
-    state: function () {
-      return this.userStore
-    },
     demo: function () {
       return {
         displayName: faker.name.findName(),

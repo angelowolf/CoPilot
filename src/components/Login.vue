@@ -5,19 +5,19 @@
           <img src="/static/img/logo.png" class="center-block logo">
           <div class="text-center col-md-4 col-sm-offset-4">
             <!-- errors -->
-            <div v-if=response class="text-red"><p>{{response}}</p></div>
+            <div v-if=mensajeError class="text-red"><p>{{mensajeError}}</p></div>
 
             <!-- login form -->
-            <form class="ui form loginForm"  @submit.prevent="checkCreds">
+            <form class="ui form loginForm"  @submit.prevent="logear">
 
               <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                <input class="form-control" name="username" placeholder="Username" type="text" v-model="username">
+                <input class="form-control" name="username" placeholder="Username" type="text" v-model="usuario">
               </div>
 
               <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                <input class="form-control" name="password" placeholder="Password" type="password" v-model="password">
+                <input class="form-control" name="password" placeholder="Password" type="password" v-model="clave">
               </div>
               <button type="submit" v-bind:class="'btn btn-primary btn-lg ' + loading">Submit</button>
             </form>
@@ -28,74 +28,57 @@
 </template>
 
 <script>
-module.exports = {
-  name: 'Login',
-  data: function (router) {
+import {loginUrl} from './../config'
+import {mapState} from 'vuex'
+
+export default{
+  computed: {
+    ...mapState({
+      userStore: state => state.userStore
+    })
+  },
+  data (router) {
     return {
-      section: 'Login',
-      loading: '',
-      username: '',
-      password: '',
-      response: ''
+      login: {
+        usuario: 'admin',
+        clave: 'admin'
+      },
+      mensajeError: ''
     }
   },
   methods: {
-    checkCreds: function () {
-      //  Change submit button
-      var self = this
-      var store = this.$store
-
-      this.toggleLoading()
-      this.resetResponse()
-      // store.dispatch('TOGGLE_LOADING')
+    logear () {
+      const postData = {
+        usuario: this.login.clave,
+        clave: this.login.usuario
+      }
+      this.limpiarMensaje()
+      this.$store.dispatch('TOGGLE_LOADING')
       //  Login
-      this.$parent.callAPI('POST', '/login', { username: this.username, password: this.password }).then(function (response) {
-        store.dispatch('TOGGLE_LOADING')
-
-        if (response.data) {
-          var data = response.data
-
-          if (data.error) {
-            if (data.error.name) { //  Object from LDAP at this point
-              switch (data.error.name) {
-                case 'InvalidCredentialsError' : self.response = 'Username/Password incorrect. Please try again.'; break
-                default: self.response = data.error.name
-              }
-            } else {
-              self.response = data.error
-            }
-          } else {
-            //  success. Let's load up the dashboard
-            if (data.user) {
-              store.dispatch('setUser', data.user)
-              var token = 'Bearer ' + data.token
-              store.dispatch('setToken', token)
-
-              // Save to local storage as well
-              if (window.localStorage) {
-                window.localStorage.setItem('user', JSON.stringify(data.user))
-                window.localStorage.setItem('token', token)
-              }
-
-              this.$router.push(data.redirect)
-            }
-          }
+      this.$http.post(loginUrl, postData).then(response => {
+        this.$store.dispatch('TOGGLE_LOADING')
+        if (response.status === 200) {
+          console.log(response.data)
+          window.localStorage.setItem('authUser', JSON.stringify(response.data.access_token))
+          // this.$http.get(userUrl, {headers: getHeader()})
+          //   .then(response => {
+          //     authUser.usuario = response.body.usuario
+          //     authUser.name = response.body.name
+          //     window.localStorage.setItem('authUser', JSON.stringify(authUser))
+          this.$store.dispatch('setToken', response.data.access_token)
+          this.$router.push('/')
+          //   })
         } else {
-          self.response = 'Did not receive a response. Please try again in a few minutes'
+          this.mensajeError = 'credenciales no validas'
         }
-        self.toggleLoading()
-      }, function (response) {
+      }, function (mensajeError) {
         // error
-        store.dispatch('TOGGLE_LOADING')
-        console.log('Error', response)
-        self.response = 'El servidor no responde'
-        self.toggleLoading()
+        this.$store.dispatch('TOGGLE_LOADING')
+        console.log('Error', mensajeError)
+        this.mensajeError = 'El servidor no responde'
       })
     },
-    toggleLoading: function () {
-      this.loading = (this.loading === '') ? 'loading' : ''
-    },
-    resetResponse: function () {
+    limpiarMensaje () {
       this.response = ''
     }
   }

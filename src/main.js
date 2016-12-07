@@ -1,3 +1,10 @@
+// Check local storage to handle refreshes
+if (window.localStorage) {
+  if (store.state.userStore.token !== window.localStorage.getItem('authUser')) {
+    store.dispatch('setToken', window.localStorage.getItem('authUser'))
+  }
+}
+
 // Import System requirements
 import Vue from 'vue'
 import Resource from 'vue-resource'
@@ -25,16 +32,12 @@ Vue.use(Resource)
 Vue.use(VueRouter)
 
 Vue.http.interceptors.push((request, next) => {
-  /*
-    Enable this when you have a backend that you authenticate against
+  // Enable this when you have a backend that you authenticate against
   var headers = request.headers
-
   if (window.location.pathname !== '/login' && !headers.hasOwnProperty('Authorization')) {
-    headers.Authorization = this.$store.state.token
+    headers.Authorization = store.state.userStore.token
   }
-  */
-  // console.log(headers)
-
+  console.log(headers)
   // continue to next interceptor without modifying the response
   next()
 })
@@ -43,7 +46,7 @@ Vue.http.interceptors.push((request, next) => {
 var router = new VueRouter({
   routes: routes,
   mode: 'history',
-  scrollBehavior: function (to, from, savedPosition) {
+  scrollBehavior (to, from, savedPosition) {
     return savedPosition || { x: 0, y: 0 }
   }
 })
@@ -52,7 +55,7 @@ var router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // window.console.log('Transition', transition)
   router.app.$store.dispatch('setMenuActual', to.name)
-  if (to.matched.some(record => record.meta.requiresAuth) && (router.app.$store.state.token === 'null')) {
+  if (to.matched.some(record => record.meta.requiresAuth) && (router.app.$store.state.userStore.token === null)) {
     window.console.log('Not authenticated')
     next({
       path: '/login',
@@ -72,10 +75,3 @@ new Vue({
   render: h => h(AppView)
 })
 
-// Check local storage to handle refreshes
-if (window.localStorage) {
-  if (store.state.user !== window.localStorage.getItem('user')) {
-    store.dispatch('setUser', JSON.parse(window.localStorage.getItem('user')))
-    store.dispatch('setToken', window.localStorage.getItem('token'))
-  }
-}

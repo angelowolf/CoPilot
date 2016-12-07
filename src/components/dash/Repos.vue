@@ -57,21 +57,19 @@ export default {
   },
   methods: {
     callGitHub () {
-      var repo = this
-
       this.$http.get(this.githubUrl).then(function (response) {
         console.log('GitHub Response:', response)
 
         if (response.status !== 200) {
-          repo.error = response.statusText
+          this.error = response.statusText
           return
         }
 
-        repo.response = response.data.items
+        this.response = response.data.items
       }, function (response) {
         // Request failed.
         console.log('error', response)
-        repo.error = response.statusText
+        this.error = response.statusText
       })
     }
   },
