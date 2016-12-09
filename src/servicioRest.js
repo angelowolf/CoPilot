@@ -11,9 +11,10 @@ export function vueHttp (tipo, url, callback) {
       if (response.status === 401) {
         Router.push('/login')
       } else {
-        store.dispatch('addNotification', {
-          text: 'ags',
-          type: 'alert',
+        store.dispatch('agregarNotificacion', {
+          titulo: 'Error de servidor',
+          texto: 'Ocurrió un error al contactar con la API.',
+          tipo: 'danger',
           delay: 10000
         })
       }

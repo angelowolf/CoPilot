@@ -14,7 +14,7 @@ const mutations = {
 
 const actions = {
   cargarUsuarios: ({commit}) => {
-    vueHttp('get', usuarioUrl + 'getTodoss', response => {
+    vueHttp('get', usuarioUrl, response => {
       commit('SET_USUARIOS', response.data)
       return response.data
     })

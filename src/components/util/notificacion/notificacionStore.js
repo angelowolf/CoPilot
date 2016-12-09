@@ -12,10 +12,10 @@ const mutations = {
 }
 
 const actions = {
-  addNotification: ({commit}, notificacion) => {
+  agregarNotificacion: ({commit}, notificacion) => {
     commit('SET_NOTIFICACION', notificacion)
   },
-  removeNotification: ({commit}, notificacion) => {
+  eliminarNotificacion: ({commit}, notificacion) => {
     commit('DELETE_NOTIFICACION', notificacion)
   }
 }
