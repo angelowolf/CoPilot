@@ -11,6 +11,7 @@ import AccessView from './components/dash/Access.vue'
 import ServerView from './components/dash/Server.vue'
 import ReposView from './components/dash/Repos.vue'
 
+import Usuarios from './components/dash/Usuarios.vue'
 // Routes
 const routes = [
   {
@@ -57,6 +58,11 @@ const routes = [
         component: ReposView,
         name: 'Repository',
         description: 'List of popular javascript repos'
+      }, {
+        path: '/usuarios',
+        component: Usuarios,
+        name: 'Usuarios',
+        description: 'Lista de usuarios'
       }
     ]
   }, {

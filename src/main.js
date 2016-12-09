@@ -8,13 +8,12 @@ if (window.localStorage) {
 // Import System requirements
 import Vue from 'vue'
 import Resource from 'vue-resource'
-import VueRouter from 'vue-router'
+import router from './router'
 
-import routes from './routes'
 import store from './store'
 
 // Import Helpers for filters
-import { domain, count, prettyDate, pluralize } from './filters'
+import { domain, count, prettyDate, pluralize, capitalize } from './filters'
 
 // Import Views - Top level
 
@@ -25,37 +24,31 @@ Vue.filter('count', count)
 Vue.filter('domain', domain)
 Vue.filter('prettyDate', prettyDate)
 Vue.filter('pluralize', pluralize)
+Vue.filter('capitalize', capitalize)
+
+// Vue.transition('fade', {
+//   enterClass: 'fadeInDown', // class of animate.css
+//   leaveClass: 'fadeOutDown' // class of animate.css
+// })
 
 // Resource logic
 Vue.use(Resource)
-
-Vue.use(VueRouter)
 
 Vue.http.interceptors.push((request, next) => {
   // Enable this when you have a backend that you authenticate against
   var headers = request.headers
   if (window.location.pathname !== '/login' && !headers.hasOwnProperty('Authorization')) {
-    headers.Authorization = store.state.userStore.token
+    headers.set('Authorization', 'Bearer ' + store.state.userStore.token)
   }
-  console.log(headers)
+  headers.set('Accept', 'application/json')
+  headers.set('Content-Type', 'application/json')
   // continue to next interceptor without modifying the response
   next()
 })
 
-// Routing logic
-var router = new VueRouter({
-  routes: routes,
-  mode: 'history',
-  scrollBehavior (to, from, savedPosition) {
-    return savedPosition || { x: 0, y: 0 }
-  }
-})
-
-// Some middleware to help us ensure the user is authenticated.
 router.beforeEach((to, from, next) => {
-  // window.console.log('Transition', transition)
-  router.app.$store.dispatch('setMenuActual', to.name)
-  if (to.matched.some(record => record.meta.requiresAuth) && (router.app.$store.state.userStore.token === null)) {
+  store.dispatch('setMenuActual', to.name)
+  if (to.matched.some(record => record.meta.requiresAuth) && (store.state.userStore.token === null)) {
     window.console.log('Not authenticated')
     next({
       path: '/login',

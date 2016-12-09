@@ -59,7 +59,7 @@ export default{
         this.$store.dispatch('TOGGLE_LOADING')
         if (response.status === 200) {
           console.log(response.data)
-          window.localStorage.setItem('authUser', JSON.stringify(response.data.access_token))
+          window.localStorage.setItem('authUser', response.data.access_token)
           // this.$http.get(userUrl, {headers: getHeader()})
           //   .then(response => {
           //     authUser.usuario = response.body.usuario

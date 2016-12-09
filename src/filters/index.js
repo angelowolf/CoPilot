@@ -21,3 +21,7 @@ export function pluralize (time, label) {
 
   return time + label + 's'
 }
+
+export function capitalize (str) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}

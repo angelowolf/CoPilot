@@ -160,6 +160,7 @@
 
           <li class="header">ME</li>
           <li class="pageLink" :class="{active: isMenuSelected('Tasks')}"><router-link to="/tasks"><i class="fa fa-tasks"></i><span class="page">Tasks</span></router-link></li>
+          <li class="pageLink" :class="{active: isMenuSelected('Usuarios')}"><router-link to="/usuarios"><i class="fa fa-tasks"></i><span class="page">Usuarios</span></router-link></li>
           <li class="pageLink" :class="{active: isMenuSelected('Settings')}"><router-link to="/setting"><i class="fa fa-cog"></i><span class="page">Settings</span></router-link></li>
 
           <li class="header">LOGS</li>
@@ -179,13 +180,14 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
+      <notificaciones></notificaciones>
       <section class="content-header">
         <h1>
           {{$route.name.toUpperCase() }}
           <small>{{ $route.meta.description }}</small>
         </h1>
         <ol class="breadcrumb">
-          <li><a href="javascript:;"><i class="fa fa-home"></i>Home</a></li>
+          <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
           <li class="active">{{$route.name.toUpperCase() }}</li>
         </ol>
       </section>
@@ -205,10 +207,15 @@
 <script>
 import faker from 'faker'
 import {mapState} from 'vuex'
+import Notificaciones from './util/notificacion/Notificaciones'
+
 require('hideseek')
 
 module.exports = {
   name: 'Dash',
+  components: {
+    Notificaciones
+  },
   data: function () {
     return {
       section: 'Dash',

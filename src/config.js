@@ -1,6 +1,6 @@
-export const apiDomain = 'http://localhost:8080/api/'
+export const apiDomain = 'http://localhost:8084/api/'
 export const loginUrl = apiDomain + 'autorizar/login'
-export const userUrl = apiDomain + 'api/user'
+export const usuarioUrl = apiDomain + 'usuario/'
 export const hijosListUrl = apiDomain + 'api/hijos'
 
 export const getHeader = function () {
