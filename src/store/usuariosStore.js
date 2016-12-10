@@ -3,12 +3,19 @@ import {vueHttp} from './../servicioRest'
 
 const state = {
   usuarios: null,
-  usuarioSeleccionado: null
+  usuarioSeleccionado: null,
+  mostrarModal: false
 }
 
 const mutations = {
-  SET_USUARIOS (sate, usuarios) {
+  SET_USUARIOS (state, usuarios) {
     state.usuarios = usuarios
+  },
+  SET_USUARIO (state, usuario) {
+    state.usuarioSeleccionado = usuario
+  },
+  TOGGLE_MODAL_USUARIO (state) {
+    state.mostrarModal = !state.mostrarModal
   }
 }
 
@@ -18,6 +25,9 @@ const actions = {
       commit('SET_USUARIOS', response.data)
       return response.data
     })
+  },
+  verUsuario: ({commit}, id) => {
+    commit('TOGGLE_MODAL_USUARIO')
   }
 }
 

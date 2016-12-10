@@ -18,4 +18,13 @@
 .fade-enter, .fade-leave-active {
   opacity: 0;
 }
+
+.modal-enter .modal-container,
+.modal-leave .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+.modal-enter, .modal-leave {
+  opacity: 0;
+}
 </style>

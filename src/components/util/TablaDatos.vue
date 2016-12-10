@@ -1,13 +1,16 @@
 <template>
   <table id="table-id" class="table table-default"></table>
 </template>
+
 <script>
   import $ from 'jquery'
+
   export default {
     props: {
-      tableData: Array,
+      datos: Array,
       columnas: Array,
-      titulos: Array
+      titulos: Array,
+      acciones: Array
     },
     data () {
       return {
@@ -16,28 +19,39 @@
         dtHandle: null
       }
     },
+    methods: {
+      ejecutarAccion (accion, id) {
+        this.$store.dispatch(accion, id)
+      },
+      renderizarBoton (accion) {
+        let etiqueta = accion['etiqueta'] || ''
+        let clase = accion['clase'] || 'btn-primary'
+        let size = accion['size'] || 'btn-small'
+        let icono = accion['icono'] ? '<i class="fa ' + accion['icono'] + '"></i>' : ''
+        return '<button data-accion="' + accion['nombre'] + '" class="btn ' + size + ' ' + clase + '">' + icono + ' ' + etiqueta + '</button>'
+      }
+    },
     watch: {
-      tableData (val, oldVal) {
+      datos (val, oldVal) {
         let vm = this
         vm.row = []
-        // You should _probably_ check that this is changed data... but we'll skip that for this example.
         val.forEach(item => {
-          // Fish out the specific column data for each item in your data set and push it to the appropriate place.
-          // Basically we're just building a multi-dimensional array here. If the data is _already_ in the right format you could
-          // skip this loop...
           let row = []
-
           if (vm.columnas !== undefined) {
             vm.columnas.forEach(columna => {
               row.push(item[columna])
             })
           }
 
+          if (vm.acciones !== undefined) {
+            let botones = ''
+            vm.acciones.forEach(accion => {
+              botones += this.renderizarBoton(accion)
+            })
+            row.push(botones)
+          }
           vm.rows.push(row)
         })
-
-        // Here's the magic to keeping the DataTable in sync.
-        // It must be cleared, new rows added, then redrawn!
         vm.dtHandle.clear()
         vm.dtHandle.rows.add(vm.rows)
         vm.dtHandle.draw()
@@ -47,6 +61,9 @@
       this.titulos.forEach(titulo => {
         this.headers.push({title: titulo})
       })
+      if (this.acciones !== undefined) {
+        this.headers.push({title: 'Operaciones'})
+      }
       this.dtHandle = $(this.$el).DataTable({
         columns: this.headers,
         data: this.rows,
@@ -74,6 +91,12 @@
             'sSortDescending': ': Activar para ordenar la columna de manera descendente'
           }
         }
+      })
+      $(document).on('click', '#table-id button', (e) => {
+        e.preventDefault()
+        let $this = $(e.currentTarget)
+        let id = $this.parents('tr').find('td:first').text()
+        this.ejecutarAccion($this.attr('data-accion'), id)
       })
     }
   }

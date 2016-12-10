@@ -1,5 +1,6 @@
 <template>
   <section class="content">
+  <usuario-modal :show.sync="this.usuariosStore.mostrarModal"></usuario-modal>
     <div class="row center-block">
       <div class="col-md-12">
         <div class="box">
@@ -17,7 +18,7 @@
               <div class="row">
                 <div class="col-sm-12">
                   <!--<tabla :datos="usuariosStore.usuarios" :columnas="columnas" :nombre="'usuarios'"></tabla>-->
-                  <tabla-datos :tableData="usuariosFiltrados" :columnas="this.columnas" :titulos="this.titulos"></tabla-datos>   
+                  <tabla-datos :datos="usuariosFiltrados" :columnas="this.columnas" :titulos="this.titulos" :acciones="this.acciones"></tabla-datos>   
                 </div>
               </div>
             </div>
@@ -33,6 +34,7 @@
 // import $ from 'jquery'
 import {mapState} from 'vuex'
 import TablaDatos from './../util/TablaDatos'
+import UsuarioModal from './../usuario/UsuarioModal'
 
 // Require needed datatables modules
 require('datatables.net')
@@ -41,7 +43,7 @@ require('datatables.net-bs')
 export default {
   name: 'Tables',
   components: {
-    TablaDatos
+    TablaDatos, UsuarioModal
   },
   computed: {
     ...mapState({
@@ -56,7 +58,11 @@ export default {
   data () {
     return {
       columnas: ['id', 'nombre', 'apellido', 'usuario'],
-      titulos: [ 'ID', 'Nombre', 'Apellido', 'Usuario' ]
+      titulos: ['ID', 'Nombre', 'Apellido', 'Usuario'],
+      acciones: [
+        { nombre: 'verUsuario', icono: 'fa-search' },
+        { nombre: 'editar-usuario', icono: 'fa-pencil' }
+      ]
     }
   },
   created () {
