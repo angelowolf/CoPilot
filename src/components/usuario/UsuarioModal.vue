@@ -1,64 +1,84 @@
 <template>
   <modal :show.sync="show" :on-close="close">
         <div class="modal-header">
-            <h3>New Post</h3>
+            <h3>{{titulo}}</h3>
         </div>
-
+        <button v-if="!this.usuariosStore.nuevo" class="btn btn-small btn-info" @click="editar=!editar">
+          <i class="fa fa-pencil"></i>
+        </button>
         <div class="modal-body">
             <label class="form-label">
-                Title
-                <input v-model="title" class="form-control">
+                Nombre
+                <input :disabled="editar && !this.usuariosStore.nuevo" v-model="u.nombre" class="form-control">
             </label>
             <label class="form-label">
-                Body
-                <textarea v-model="body" rows="5" class="form-control"></textarea>
+                Apellido
+                <input :disabled="editar && !this.usuariosStore.nuevo" v-model="u.apellido" class="form-control">
+            </label>
+            <label class="form-label">
+                Usuario
+                <input :disabled="editar && !this.usuariosStore.nuevo" v-model="u.usuario" class="form-control">
             </label>
         </div>
 
         <div class="modal-footer text-right">
-            <button class="modal-default-button" @click="savePost()">
-                Save
-            </button>
+          <button :disabled="editar && !this.usuariosStore.nuevo" class="btn btn-success" @click="guardar()">
+            Guardar
+          </button>
         </div>
     </modal>
 </template>
 <script>
 import Modal from './../util/Modal'
 import {mapState} from 'vuex'
+import $ from 'jquery'
+
 export default {
   props: ['show'],
   components: { Modal },
   computed: {
     ...mapState({
       usuariosStore: state => state.usuariosStore
-    })
+    }),
+    u () {
+      this.usuario = $.extend({}, this.usuariosStore.usuarioSeleccionado)
+      return this.usuario
+    },
+    titulo () {
+      if (this.usuariosStore.nuevo) {
+        return 'Nuevo Usuario'
+      } else {
+        return 'Usuario ' + this.usuario.nombre + ' ' + this.usuario.apellido
+      }
+    }
   },
   data () {
     return {
-      title: '',
-      body: ''
+      editar: true,
+      usuario: {
+        nombre: '',
+        apellido: '',
+        usuario: ''
+      }
     }
   },
   methods: {
     close () {
       this.$store.commit('TOGGLE_MODAL_USUARIO')
-      this.title = ''
-      this.body = ''
+      this.$store.commit('SET_USUARIO', {})
+      this.editar = true
     },
-    savePost () {
-      console.log('me cierro')
-      this.close()
+    guardar () {
+      if (this.usuariosStore.nuevo) {
+        this.$store.dispatch('insertarUsuario', this.usuario)
+      } else {
+        this.$store.dispatch('actualizarUsuario', this.usuario)
+      }
     }
   }
 }
 </script>
 <style>
-  Edit in JSFiddle
-JavaScript
-HTML
-CSS
-Result
-Resources
 * {
     box-sizing: border-box;
 }
@@ -75,7 +95,7 @@ Resources
 }
 
 .modal-container {
-    width: 300px;
+    width: 500px;
     margin: 40px auto 0;
     padding: 20px 30px;
     background-color: #fff;

@@ -1,6 +1,11 @@
 <template>
   <section class="content">
   <usuario-modal :show.sync="this.usuariosStore.mostrarModal"></usuario-modal>
+    <div class="row">
+      <div class="col-md-12">
+        <button @click.prevent="nuevoUsuario()" class="btn btn-success pull-right">Añadir <i class="fa fa-plus"></i></button>
+      </div>
+    </div>
     <div class="row center-block">
       <div class="col-md-12">
         <div class="box">
@@ -51,8 +56,13 @@ export default {
     }),
     usuariosFiltrados () {
       let usuarios = this.usuariosStore.usuarios
-
       return usuarios
+    }
+  },
+  methods: {
+    nuevoUsuario () {
+      this.$store.commit('SET_NUEVO_USUARIO', true)
+      this.$store.commit('TOGGLE_MODAL_USUARIO')
     }
   },
   data () {
@@ -61,7 +71,7 @@ export default {
       titulos: ['ID', 'Nombre', 'Apellido', 'Usuario'],
       acciones: [
         { nombre: 'verUsuario', icono: 'fa-search' },
-        { nombre: 'editar-usuario', icono: 'fa-pencil' }
+        { nombre: 'eliminarUsuario', icono: 'fa-trash', clase: 'btn-danger' }
       ]
     }
   },

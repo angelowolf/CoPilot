@@ -35,6 +35,7 @@
       datos (val, oldVal) {
         let vm = this
         vm.row = []
+        vm.rows = []
         val.forEach(item => {
           let row = []
           if (vm.columnas !== undefined) {
@@ -42,7 +43,6 @@
               row.push(item[columna])
             })
           }
-
           if (vm.acciones !== undefined) {
             let botones = ''
             vm.acciones.forEach(accion => {
