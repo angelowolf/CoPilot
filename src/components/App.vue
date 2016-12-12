@@ -36,7 +36,37 @@
           window.localStorage.setItem('token', null)
         }
         this.$router.push('/login')
+      },
+      mensajeRecibido (response) {
+        let mensaje = JSON.parse(response.data)
+        let tipo = mensaje.tipo + ''
+        console.log('tipo', tipo)
+        switch (tipo) {
+          case 'LOGIN':
+            {
+              console.log('LOGIN', mensaje.mensaje)
+            }
+            break
+          case 'OK':
+            {
+              console.log('OK', mensaje.mensaje)
+            }
+            break
+          case 'ERROR':
+            {
+              console.log('ERROR', mensaje.mensaje)
+            }
+            break
+        }
       }
+    },
+    created () {
+      var socket = new WebSocket('ws://localhost:8081/wsnotificacion')
+      socket.onopen = function () {
+        var msg = '{"idUsuario":"' + 1 + '","tipo":"LOGIN"}'
+        socket.send(msg)
+      }
+      socket.onmessage = this.mensajeRecibido
     }
   }
 </script>
