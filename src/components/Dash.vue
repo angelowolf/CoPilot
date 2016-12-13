@@ -191,7 +191,7 @@
           <li class="active">{{$route.name.toUpperCase() }}</li>
         </ol>
       </section>
-
+      <mensajes></mensajes>
       <router-view></router-view>
     </div>
     <!-- /.content-wrapper -->
@@ -208,13 +208,15 @@
 import faker from 'faker'
 import {mapState} from 'vuex'
 import Notificaciones from './util/notificacion/Notificaciones'
+import Mensajes from './util/mensaje/Mensajes'
 
 require('hideseek')
 
 module.exports = {
   name: 'Dash',
   components: {
-    Notificaciones
+    Notificaciones,
+    Mensajes
   },
   data: function () {
     return {
@@ -256,7 +258,12 @@ module.exports = {
     }
   },
   mounted: function () {
-    // Page is ready. Let's load our functions!
+    this.$store.dispatch('agregarMensaje', {
+      titulo: 'Atención',
+      texto: 'El sistema entrará en mantenimiento dentro de',
+      tipo: 'warning',
+      mantenimiento: '2016-12-14 13:00:00'
+    })
   }
 }
 </script>

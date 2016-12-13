@@ -11,7 +11,7 @@
     },
     methods: {
       eliminarNotificacion (notificacion) {
-        this.notificacionStore.dispatch('removeNotification', notificacion)
+        this.notificacionStore.dispatch('eliminarNotificacion', notificacion)
       }
     }
   }
